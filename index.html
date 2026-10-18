@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#e8f0e6">
+  <meta name="description" content="A gentle vegetarian meal, movement, water and green tea tracker.">
+  <title>Little by Little 🌿</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <style>
+    :root{--bg:#f6f7f1;--card:#fffefb;--ink:#294936;--muted:#6d7c70;--green:#527b5b;--soft:#e8f0e6;--line:#dce5d9;--lav:#eee9f8;--shadow:0 8px 26px rgba(45,75,51,.08)}
+    *{box-sizing:border-box} body{margin:0;background:linear-gradient(180deg,#edf4eb 0,#f8f7f3 320px,var(--bg) 100%);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);padding:env(safe-area-inset-top) 14px calc(24px + env(safe-area-inset-bottom));}
+    main{max-width:620px;margin:0 auto}.hero{padding:24px 4px 18px;display:flex;align-items:center;gap:13px}.logo{width:58px;height:58px;border-radius:20px;background:#d9e8d5;display:grid;place-items:center;font-size:30px;box-shadow:var(--shadow)}h1{font-size:25px;line-height:1.1;margin:0 0 6px;letter-spacing:-.6px}.subtitle{color:var(--muted);font-size:13px}
+    .card{background:var(--card);border:1px solid rgba(198,217,197,.75);border-radius:22px;padding:17px;margin:12px 0;box-shadow:var(--shadow)}.summary{background:var(--soft);border-color:#d1e0d0}.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.label{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);font-weight:750}.big{font-size:32px;font-weight:800;letter-spacing:-1px}.muted{color:var(--muted);font-size:13px}.progress{height:9px;background:#d1e0d0;border-radius:99px;overflow:hidden;margin-top:13px}.progress span{display:block;height:100%;width:0;background:var(--green);border-radius:99px;transition:width .2s}
+    .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:13px}.day{border:1px solid var(--line);background:#fff;border-radius:13px;padding:10px 2px;color:var(--ink);font-weight:700;font-size:12px;cursor:pointer}.day small{display:block;margin-top:5px;font-size:10px;color:var(--muted)}.day.active{background:#dcebdd;border-color:#7fa184}.day.done{box-shadow:inset 0 -3px #7fa184}
+    h2{font-size:17px;margin:0 0 12px;letter-spacing:-.2px}.section-title{display:flex;align-items:center;gap:8px;margin-bottom:12px}.section-title span{font-size:21px}.checklist{display:grid;gap:9px}.check{display:flex;align-items:flex-start;gap:10px;padding:10px 11px;background:#fafbf7;border:1px solid #edf0e8;border-radius:13px;font-size:14px;line-height:1.35}.check input{width:19px;height:19px;accent-color:var(--green);flex:0 0 auto;margin:0;transform:translateY(1px)}.meal{display:flex;gap:10px;align-items:flex-start;margin:10px 0}.meal strong{display:block;font-size:13px;margin-bottom:3px}.meal p{font-size:13px;color:var(--muted);margin:0;line-height:1.4}.meal-icon{width:38px;height:38px;flex-shrink:0;border-radius:13px;background:var(--soft);display:grid;place-items:center;font-size:20px}
+    .water{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.cup{border:1px solid var(--line);background:#f8faf6;border-radius:12px;width:37px;height:42px;font-size:18px;cursor:pointer}.cup.on{background:#dcebdd;border-color:#8caf8f}.note{width:100%;border:1px solid var(--line);background:#fcfcf8;border-radius:13px;padding:12px;font:inherit;font-size:14px;resize:vertical;color:var(--ink);min-height:76px}.btn{border:0;border-radius:14px;background:var(--green);color:white;font-weight:750;padding:12px 15px;font-size:14px;cursor:pointer}.btn.secondary{background:var(--lav);color:#51436f}.btn.full{width:100%;margin-top:10px}.footer{text-align:center;color:var(--muted);font-size:12px;padding:14px 8px 6px;line-height:1.5}.install{display:none}.install.show{display:inline-flex}
+    @media(min-width:520px){body{padding-left:22px;padding-right:22px}.hero{padding-top:30px}.card{padding:20px}}
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <div class="logo">🌿</div>
+    <div><h1>Little by Little</h1><div class="subtitle">Your gentle wellness companion ✨</div></div>
+  </header>
+
+  <section class="card summary">
+    <div class="row">
+      <div><div class="label">This week's progress</div><div class="big"><span id="percent">0</span>%</div><div class="muted" id="count">0 habits completed</div></div>
+      <div style="font-size:46px" aria-hidden="true">🌱</div>
+    </div>
+    <div class="progress"><span id="progressbar"></span></div>
+    <p class="muted" style="margin:11px 0 0">Small steps count. No perfection, no crash diets. 💚</p>
+  </section>
+
+  <section class="card">
+    <div class="row"><h2 style="margin:0">Your week</h2><button class="btn secondary install" id="installBtn">Install app</button></div>
+    <div class="days" id="days"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><span>🌿</span><h2 style="margin:0">Daily habits</h2></div>
+    <div class="checklist" id="habits"></div>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><span>🍚</span><h2 style="margin:0">Vegetarian meal reminders</h2></div>
+    <p class="muted" style="margin:-4px 0 12px">Egg-free • rice-friendly • flexible portions</p>
+    <div id="meals"></div>
+    <p class="muted">Eat enough to feel satisfied. Swap meals based on what's available at home.</p>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><span>🏡</span><h2 style="margin:0">Today's movement</h2></div>
+    <p id="workout" style="font-size:14px;line-height:1.5;margin:0 0 12px"></p>
+    <label class="check"><input id="workoutDone" type="checkbox"><span>I moved my body / took a rest day</span></label>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><span>💧</span><h2 style="margin:0">Water check</h2></div>
+    <p class="muted">Tap a glass to log your water. Follow your thirst; don't force it.</p>
+    <div class="water" id="water"></div>
+    <div class="muted" id="waterCount">0 glasses logged</div>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><span>🍵</span><h2 style="margin:0">Green tea (optional)</h2></div>
+    <label class="check"><input type="checkbox" id="teaDone"><span>Had my cup today, if I wanted one</span></label>
+    <p class="muted" style="margin:10px 0 0">Green tea is optional and doesn't specifically burn belly fat. Avoid it if it causes acidity or jitters.</p>
+  </section>
+
+  <section class="card">
+    <div class="section-title"><span>💌</span><h2 style="margin:0">A note to myself</h2></div>
+    <textarea class="note" id="note" placeholder="How did I feel today? What went well?"></textarea>
+    <button class="btn full" id="saveNote">Save today's note</button>
+    <button class="btn secondary full" id="resetDay">Reset this day</button>
+  </section>
+
+  <div class="footer">Made for you, with care 🌱<br>Rest is productive, rice is allowed, and progress isn't linear.</div>
+</main>
+<script>
+const dayNames=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const shortDays=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+const habitNames=["Ate regular, balanced meals","Included vegetarian protein","Moved my body","Drank water regularly","Made time to wind down"];
+const mealPlans=[
+ ["Idli + sambar","Rice + pappu + vegetable curry + curd","Banana + roasted chana","Chapati or rice + paneer/soy curry + vegetables"],
+ ["Vegetable upma + curd","Rice + sambar + vegetable curry","Seasonal fruit + peanuts","Rice + rajma or chana + vegetables"],
+ ["Dosa + sambar","Rice + tomato pappu + greens + curd","Buttermilk + roasted chana","Vegetable khichdi with dal + curd"],
+ ["Besan chilla + curd","Rice + dal + cabbage/beans curry","Seasonal fruit","Rice + soy-chunk curry + vegetables"],
+ ["Pesarattu + chutney","Rice + sambar + vegetables + curd","Milk or curd + fruit","Chapati or rice + chana masala + vegetables"],
+ ["Poha with peas + peanuts","Rice + dal + favourite home curry","Buttermilk + roasted chana","Dosa or chapati + paneer bhurji or dal + vegetables"],
+ ["Usual breakfast: idli/dosa/upma","Rice + dal + vegetables + curd","Fruit or a homemade snack","Vegetable pulao + raita + dal/beans"]
+];
+const workouts=["Easy indoor walk for 10–15 minutes + gentle stretching.","One easy round: 8 chair squats, 8 wall push-ups, 10 glute bridges, 6 bird-dogs per side.","Indoor walk or marching for 15–20 minutes at a comfortable pace.","Gentle stretching for 5–10 minutes, or an easy walk if you feel good.","Repeat Tuesday's beginner strength session if recovered comfortably.","Dance or walk for 15–20 minutes, at your own pace.","Rest and recharge. Gentle movement is optional."];
+const defaultData=()=>({habits:Array.from({length:7},()=>Array(5).fill(false)),meals:Array.from({length:7},()=>Array(4).fill(false)),workouts:Array(7).fill(false),water:Array(7).fill(0),tea:Array(7).fill(false),notes:Array(7).fill("")});
+let data;
+try{data=JSON.parse(localStorage.getItem("littleByLittleData"))||defaultData()}catch(e){data=defaultData()}
+let selectedDay=(new Date().getDay()+6)%7;
+function save(){localStorage.setItem("littleByLittleData",JSON.stringify(data));renderAll()}
+function renderDays(){
+ const el=document.getElementById("days");el.innerHTML="";
+ shortDays.forEach((d,i)=>{const b=document.createElement("button");b.className="day"+(i===selectedDay?" active":"")+(dayComplete(i)?" done":"");b.innerHTML=d+"<small>"+(dayComplete(i)?"✓":`${data.habits[i].filter(Boolean).length}/5`)+"</small>";b.onclick=()=>{selectedDay=i;renderAll()};el.appendChild(b)})
+}
+function dayComplete(i){return data.habits[i].every(Boolean)&&data.meals[i].every(Boolean)&&data.workouts[i]}
+function renderHabits(){const el=document.getElementById("habits");el.innerHTML="";habitNames.forEach((name,i)=>{const l=document.createElement("label");l.className="check";const input=document.createElement("input");input.type="checkbox";input.checked=data.habits[selectedDay][i];input.onchange=()=>{data.habits[selectedDay][i]=input.checked;save()};const s=document.createElement("span");s.textContent=name;l.append(input,s);el.appendChild(l)})}
+function renderMeals(){const el=document.getElementById("meals");el.innerHTML="";const labels=["Breakfast","Lunch","Evening snack","Dinner"],icons=["🌞","🍲","🍎","🌙"];mealPlans[selectedDay].forEach((meal,i)=>{const wrap=document.createElement("div");wrap.className="meal";const ic=document.createElement("div");ic.className="meal-icon";ic.textContent=icons[i];const text=document.createElement("div");text.style.flex="1";const strong=document.createElement("strong");strong.textContent=labels[i];const p=document.createElement("p");p.textContent=meal;text.append(strong,p);const input=document.createElement("input");input.type="checkbox";input.setAttribute("aria-label",labels[i]+" completed");input.checked=data.meals[selectedDay][i];input.style.width="19px";input.style.height="19px";input.style.accentColor="var(--green)";input.onchange=()=>{data.meals[selectedDay][i]=input.checked;save()};wrap.append(ic,text,input);el.appendChild(wrap)})}
+function renderWater(){const el=document.getElementById("water");el.innerHTML="";for(let i=1;i<=8;i++){const b=document.createElement("button");b.className="cup"+(data.water[selectedDay]>=i?" on":"");b.textContent=data.water[selectedDay]>=i?"💧":"＋";b.setAttribute("aria-label",`Log ${i} glasses`);b.onclick=()=>{data.water[selectedDay]=data.water[selectedDay]===i?i-1:i;save()};el.appendChild(b)}document.getElementById("waterCount").textContent=data.water[selectedDay]+" glasses logged"}
+function renderAll(){renderDays();renderHabits();renderMeals();renderWater();document.getElementById("workout").textContent=workouts[selectedDay];document.getElementById("workoutDone").checked=data.workouts[selectedDay];document.getElementById("teaDone").checked=data.tea[selectedDay];document.getElementById("note").value=data.notes[selectedDay];const habitTotal=data.habits.reduce((s,r)=>s+r.filter(Boolean).length,0);const mealTotal=data.meals.reduce((s,r)=>s+r.filter(Boolean).length,0);const workoutTotal=data.workouts.filter(Boolean).length;const teaTotal=data.tea.filter(Boolean).length;const waterTotal=data.water.reduce((s,n)=>s+n,0);const done=habitTotal+mealTotal+workoutTotal+teaTotal;const possible=7*(5+4+1+1);const pct=Math.round(done/possible*100);document.getElementById("percent").textContent=pct;document.getElementById("count").textContent=`${done} of ${possible} check-ins completed`;document.getElementById("progressbar").style.width=pct+"%"}
+document.getElementById("workoutDone").onchange=e=>{data.workouts[selectedDay]=e.target.checked;save()};
+document.getElementById("teaDone").onchange=e=>{data.tea[selectedDay]=e.target.checked;save()};
+document.getElementById("saveNote").onclick=()=>{data.notes[selectedDay]=document.getElementById("note").value;localStorage.setItem("littleByLittleData",JSON.stringify(data));const b=document.getElementById("saveNote");b.textContent="Saved ✓";setTimeout(()=>b.textContent="Save today's note",1300)};
+document.getElementById("resetDay").onclick=()=>{if(confirm("Reset all check-ins for "+dayNames[selectedDay]+"?")){data.habits[selectedDay]=Array(5).fill(false);data.meals[selectedDay]=Array(4).fill(false);data.workouts[selectedDay]=false;data.water[selectedDay]=0;data.tea[selectedDay]=false;data.notes[selectedDay]="";save()}};
+let deferredPrompt=null;const installBtn=document.getElementById("installBtn");window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;installBtn.classList.add("show")});installBtn.onclick=async()=>{if(deferredPrompt){deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null;installBtn.classList.remove("show")}else{alert("In Chrome, tap ⋮ then choose 'Add to Home screen' or 'Install app'.")}};
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+renderAll();
+</script>
+</body>
+</html>
